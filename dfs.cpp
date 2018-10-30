@@ -47,14 +47,15 @@ Edges getEdges( )
 
 }
 
-void dfs(unsigned v, Graph& g, unsigned& count)
+void dfs(unsigned v, Graph& g, unsigned& count, unsigned& compcounter)
 {
 	count++;
 	g.V[v].visited = count;
-	
+	g.V[v].component = compcounter; //new counter added 
   	for(auto w: g.E[v])//iterate over neighbours of node v
   	  if ( g.V[w].visited == 0 )
-		dfs(w, g, count);
+		dfs(w, g, count, compcounter); //new comp counter added
+		
 	
 }
 
@@ -65,12 +66,14 @@ void mainDFS(const Edges& E)
   G.V.resize(E.size());
   G.E = E; //Hopefully the compiler optimizes this 
   unsigned counter = 0;
+  unsigned compcounter = 0; //New Counter
   
   for(unsigned i = 0; i < G.V.size(); i++)//iterate over nodes
     {
 	   if(G.V[i].visited == 0)
-	     {		     
-	       dfs(i, G, counter);		
+	     {	
+			 compcounter ++;	     
+	       dfs(i, G, counter, compcounter);	 //passing new counter to dfs	
 	      }  
      }  	
       	
@@ -79,6 +82,8 @@ void mainDFS(const Edges& E)
   for(unsigned i =0; i < G.V.size();i++)
   {
     cerr << i<<" visited "<< G.V[i].visited << endl;
+    cout <<" The component is "<< G.V[i].component << endl; //Implmented line to print component number
+    
    }
     
 }
